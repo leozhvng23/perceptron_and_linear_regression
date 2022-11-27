@@ -1,11 +1,8 @@
 import numpy as np
 import pandas as pd
 import sys, os
-import math
 import matplotlib.pyplot as plt
 from matplotlib import cm
-import matplotlib.lines as mlines
-from mpl_toolkits.mplot3d import Axes3D
 
 
 ALPHAS = [
@@ -86,7 +83,7 @@ def visualize_3d(
         title = "LinReg Height with Alpha %f" % alpha
     ax.set_title(title)
 
-    ax.view_init(2, 60)
+    ax.view_init(5, 60)
     # for ii in np.arange(0, 360, 1):
     #   ax.view_init(elev=32, azim=ii)
     #   fig.savefig('./gif/gif_image%d.png' % ii)
@@ -121,20 +118,17 @@ class LinearRegression:
 
 def main():
 
-    infile, outfile = sys.argv[1], sys.argv[2]
-    inpath = os.path.join(os.getcwd(), infile)
-    outpath = os.path.join(os.getcwd(), outfile)
-
+    inpath = os.path.join(os.getcwd(), sys.argv[1])
+    outpath = os.path.join(os.getcwd(), sys.argv[2])
     df = pd.read_csv(inpath, header=None)
     data = df.values
 
+    # data preprocess
     # normalize data
     for i in range(data.shape[1] - 1):
         data[:, i] = (data[:, i] - np.mean(data[:, i])) / np.std(data[:, i])
-
     # Insert constant ones for y-intercept
     data = np.insert(data, 0, 1, axis=1)
-
     # Split data into features and labels
     X, y = data[:, :-1], data[:, -1]
 
@@ -146,9 +140,9 @@ def main():
     results_df = pd.DataFrame(
         data=results, columns=["alpha", "num_iters", "bias", "b_age", "b_weight"]
     )
-
     results_df.to_csv(outpath, index=False, header=False)
     weights = results[:, 2:]
+
     visualize_3d(df, lin_reg_weights=weights[0], alpha=ALPHAS[0][0], id=0)
     visualize_3d(df, lin_reg_weights=weights[1], alpha=ALPHAS[1][0], id=1)
     visualize_3d(df, lin_reg_weights=weights[2], alpha=ALPHAS[2][0], id=2)

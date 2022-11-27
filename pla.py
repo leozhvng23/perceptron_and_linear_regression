@@ -39,29 +39,29 @@ def visualize_scatter(df, feat1=0, feat2=1, labels=2, weights=[-1, -1, 1], title
 
 
 def main():
-    """YOUR CODE GOES HERE"""
-    infile, outfile = sys.argv[1], sys.argv[2]
-    inpath = os.path.join(os.getcwd(), infile)
-    outpath = os.path.join(os.getcwd(), outfile)
-
+    # import data
+    inpath = os.path.join(os.getcwd(), sys.argv[1])
+    outpath = os.path.join(os.getcwd(), sys.argv[2])
     df = pd.read_csv(inpath, header=None)
-
     data = np.asmatrix(df, dtype="float64")
     features, labels = data[:, :-1], data[:, -1]
 
+    # initialize weights
     w = np.zeros(shape=(1, 3))
-    ws = np.empty(shape=[0, 3])
+    ws = np.empty(shape=[0, 3])  # 2D
+
     for _ in range(20):
-        for x, label in zip(features, labels):
-            x = np.insert(x, 0, 1)
-            f = np.dot(w, x.transpose())
-            if label * f <= 0:
-                w += (x * label.item(0, 0)).tolist()
+        for feature, label in zip(features, labels):
+            feature = np.insert(feature, 0, 1)  # add bias column
+            fx = np.dot(w, feature.transpose())
+            if label * fx <= 0:
+                w += (feature * label.item(0, 0)).tolist()
         ws = np.vstack((ws, w))
 
     visualize_scatter(df, weights=w[-1])
 
     results_df = pd.DataFrame(data=ws)
+    # reorder columns
     results_df = results_df[[results_df.columns[i] for i in [1, 2, 0]]]
     results_df.to_csv(outpath, index=False, header=False)
 

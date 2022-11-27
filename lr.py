@@ -88,7 +88,6 @@ def visualize_3d(
     #   ax.view_init(elev=32, azim=ii)
     #   fig.savefig('./gif/gif_image%d.png' % ii)
     plt.savefig("./3dplot_" + str(id) + ".png")
-    plt.show()
 
 
 class LinearRegression:

@@ -35,7 +35,6 @@ def visualize_scatter(df, feat1=0, feat2=1, labels=2, weights=[-1, -1, 1], title
     ax.set_ylabel("")
 
     plt.savefig("./scatterplot.png")
-    plt.show()
 
 
 def main():
